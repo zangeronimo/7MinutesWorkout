@@ -94,6 +94,31 @@
 
         </FrameLayout>
 
+        <TextView
+            android:id="@+id/tvUpcomingExercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPCOMING EXERCISE:"
+            android:visibility="invisible"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/flProgressBar" />
+
+        <TextView
+            android:id="@+id/tvNextExercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jumping Jack"
+            android:visibility="invisible"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvUpcomingExercise" />
+
         <FrameLayout
             android:id="@+id/flExerciseView"
             android:layout_width="100dp"
@@ -136,5 +161,7 @@
 
         </FrameLayout>
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

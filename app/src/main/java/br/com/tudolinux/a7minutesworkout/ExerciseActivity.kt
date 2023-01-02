@@ -42,7 +42,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private fun setRestProgressBar(){
-        restTimer = object: CountDownTimer((restProgress * 1000).toLong(), 1000){
+        restTimer = object: CountDownTimer((restProgress * 1003).toLong(), 1000){
             override fun onTick(p0: Long) {
                 restProgress--
                 binding?.progressBar?.progress = restProgress
@@ -57,7 +57,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private fun setExerciseProgressBar(){
-        exerciseTimer = object: CountDownTimer((exerciseProgress * 1000).toLong(), 1000){
+        exerciseTimer = object: CountDownTimer((exerciseProgress * 1005).toLong(), 1000){
             override fun onTick(p0: Long) {
                 exerciseProgress--
                 binding?.progressBarExercise?.progress = exerciseProgress
@@ -77,6 +77,9 @@ class ExerciseActivity : AppCompatActivity() {
     private fun setupRestView(){
         binding?.flProgressBar?.visibility = View.VISIBLE
         binding?.tvTitle?.text = "GET READY TO"
+        binding?.tvUpcomingExercise?.visibility = View.VISIBLE
+        binding?.tvNextExercise?.text = exerciseList!![currentExercisePosition+1].getName()
+        binding?.tvNextExercise?.visibility = View.VISIBLE
         binding?.ivExercise?.visibility = View.INVISIBLE
         binding?.flExerciseView?.visibility = View.GONE
 
@@ -90,6 +93,8 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun setupExerciseView(){
         binding?.flProgressBar?.visibility = View.GONE
+        binding?.tvUpcomingExercise?.visibility = View.GONE
+        binding?.tvNextExercise?.visibility = View.GONE
         binding?.tvTitle?.text = exerciseList!![currentExercisePosition].getName()
         binding?.ivExercise?.setImageResource(exerciseList!![currentExercisePosition].getImage())
         binding?.ivExercise?.visibility = View.VISIBLE
