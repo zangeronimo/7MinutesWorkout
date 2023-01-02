@@ -17,6 +17,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/ivExercise"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_jumping_jacks"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarExercise"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -27,7 +40,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/llProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivExercise" />
 
     <LinearLayout
         android:id="@+id/llProgressBar"
