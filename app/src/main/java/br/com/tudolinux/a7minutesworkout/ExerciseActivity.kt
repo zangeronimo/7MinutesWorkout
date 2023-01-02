@@ -1,5 +1,7 @@
 package br.com.tudolinux.a7minutesworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -23,6 +25,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercisePosition = -1
 
     private var tts: TextToSpeech? = null
+    private var player: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         tts = TextToSpeech(this, this)
+        setupMediaPlayer()
 
         exerciseList = Constants.defaultExerciseList()
 
@@ -53,6 +57,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 restProgress--
                 binding?.progressBar?.progress = restProgress
                 binding?.tvTimer?.text = "$restProgress"
+
+                if (restProgress == 1) {
+                    speakOut("Ready?")
+                }
             }
 
             override fun onFinish() {
@@ -69,7 +77,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 binding?.progressBarExercise?.progress = exerciseProgress
                 binding?.tvTimerExercise?.text = "$exerciseProgress"
 
-                if(exerciseProgress <= 5){
+                if(exerciseProgress in 1..5){
                     speakOut(exerciseProgress.toString())
                 }
             }
@@ -84,7 +92,21 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }.start()
     }
 
+    private fun setupMediaPlayer() {
+        try{
+            var soundURI = Uri.parse("android.resource://br.com.tudolinux.a7minutesworkout/" + R.raw.press_start)
+
+            player = MediaPlayer.create(applicationContext, soundURI)
+            player?.isLooping = false
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
     private fun setupRestView(){
+
+        player?.start()
+
         binding?.flProgressBar?.visibility = View.VISIBLE
         binding?.tvTitle?.text = "GET READY TO"
         binding?.tvUpcomingExercise?.visibility = View.VISIBLE
@@ -136,6 +158,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (tts != null) {
             tts?.stop()
             tts?.shutdown()
+        }
+
+        if(player != null) {
+            player?.stop()
         }
 
         currentExercisePosition = -1
