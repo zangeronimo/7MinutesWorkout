@@ -1,5 +1,6 @@
 package br.com.tudolinux.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -13,14 +14,16 @@ import br.com.tudolinux.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.Locale
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    private val restProgressTimerDuration = 10
+    private val exerciseTimerDuration = 30
 
     private var binding : ActivityExerciseBinding? = null
 
     private var restTimer: CountDownTimer? = null
-    private var restProgress = 10
+    private var restProgress = restProgressTimerDuration
 
     private var exerciseTimer: CountDownTimer? = null
-    private var exerciseProgress = 30
+    private var exerciseProgress = exerciseTimerDuration
 
     private var exerciseList : ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
@@ -64,7 +67,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setRestProgressBar(){
-        restTimer = object: CountDownTimer((restProgress * 1003).toLong(), 1000){
+        binding?.tvTimer?.text = "$restProgressTimerDuration"
+        restTimer = object: CountDownTimer((restProgressTimerDuration * 1003).toLong(), 1000){
             override fun onTick(p0: Long) {
                 restProgress--
                 binding?.progressBar?.progress = restProgress
@@ -87,7 +91,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setExerciseProgressBar(){
-        exerciseTimer = object: CountDownTimer((exerciseProgress * 1005).toLong(), 1000){
+        binding?.tvTimerExercise?.text = "$exerciseTimerDuration"
+
+        exerciseTimer = object: CountDownTimer((exerciseTimerDuration * 1005).toLong(), 1000){
             override fun onTick(p0: Long) {
                 exerciseProgress--
                 binding?.progressBarExercise?.progress = exerciseProgress
@@ -99,15 +105,15 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
-                exerciseList!![currentExercisePosition].setIsSelected(false)
-                exerciseList!![currentExercisePosition].setIsCompleted(true)
-
-                exerciseAdapter!!.notifyDataSetChanged()
-
                 if(currentExercisePosition < exerciseList?.size!! - 1) {
+                    exerciseList!![currentExercisePosition].setIsSelected(false)
+                    exerciseList!![currentExercisePosition].setIsCompleted(true)
+                    exerciseAdapter!!.notifyDataSetChanged()
                     setupRestView()
                 } else {
-                    onBackPressed()
+                    val intent = Intent(this@ExerciseActivity, FinishActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }.start()
@@ -138,7 +144,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         if(restTimer != null){
             restTimer?.cancel()
-            restProgress = 10
+            restProgress = restProgressTimerDuration
         }
 
         setRestProgressBar()
@@ -155,7 +161,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         if(exerciseTimer != null){
             exerciseTimer?.cancel()
-            exerciseProgress = 30
+            exerciseProgress = exerciseTimerDuration
         }
 
         speakOut(exerciseList!![currentExercisePosition].getName())
@@ -168,12 +174,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         if(restTimer != null){
             restTimer?.cancel()
-            restProgress = 10
+            restProgress = restProgressTimerDuration
         }
 
         if(exerciseTimer != null){
             exerciseTimer?.cancel()
-            exerciseProgress = 30
+            exerciseProgress = exerciseTimerDuration
         }
 
         if (tts != null) {
