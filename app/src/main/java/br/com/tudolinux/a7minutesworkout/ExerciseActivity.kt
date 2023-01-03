@@ -1,5 +1,6 @@
 package br.com.tudolinux.a7minutesworkout
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.tudolinux.a7minutesworkout.databinding.ActivityExerciseBinding
+import br.com.tudolinux.a7minutesworkout.databinding.DialogCustomBackConfirmationBinding
 import java.util.Locale
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -51,11 +53,30 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         exerciseList = Constants.defaultExerciseList()
 
         binding?.toolbarExercise?.setNavigationOnClickListener{
-            onBackPressed()
+            customDialogFromBackButton()
         }
 
         setupRestView()
         setupExerciseStatusRecyclerView()
+    }
+
+    override fun onBackPressed() {
+        customDialogFromBackButton()
+    }
+
+    private fun customDialogFromBackButton(){
+        val customDialog = Dialog(this)
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        customDialog.setContentView(dialogBinding.root)
+        customDialog.setCanceledOnTouchOutside(false)
+        dialogBinding.btnYes.setOnClickListener {
+            this@ExerciseActivity.finish()
+            customDialog.dismiss()
+        }
+        dialogBinding.btnNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+        customDialog.show()
     }
 
     private fun setupExerciseStatusRecyclerView(){
@@ -68,7 +89,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setRestProgressBar(){
         binding?.tvTimer?.text = "$restProgressTimerDuration"
-        restTimer = object: CountDownTimer((restProgressTimerDuration * 1003).toLong(), 1000){
+        restTimer = object: CountDownTimer((restProgressTimerDuration * 1005).toLong(), 1000){
             override fun onTick(p0: Long) {
                 restProgress--
                 binding?.progressBar?.progress = restProgress
